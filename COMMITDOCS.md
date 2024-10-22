@@ -1,3 +1,4 @@
+# Semantik Commit untuk Repo ini
 Semantik commit yang digunakan di repo ini adalah *Conventional Commits*, yang punya beberapa kata kunci atau "type" untuk mendeskripsikan jenis perubahan. Ini beberapa yang paling umum:
 
 1. **feat**: Penambahan fitur baru atau peningkatan yang signifikan.
