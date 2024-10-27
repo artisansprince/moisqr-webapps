@@ -21,8 +21,8 @@ MOIS adalah aplikasi berbasis web yang membantu pengelola museum untuk menginput
   - Layout responsif dan mudah diakses dari berbagai perangkat (desktop, mobile, tablet).
 
 #### 4. **Teknologi yang Digunakan**
-- **Backend (Express.js)**:
-  - Express.js untuk API dan backend logic.
+- **Backend (AdonisJS)**:
+  - AdonisJS untuk API dan backend logic.
   - Database: MariaDB, MongoDB (atau PostgreSQL) untuk penyimpanan data objek museum.
   - Library: `qrcode` untuk generate QR code.
   
@@ -54,13 +54,13 @@ Pembagian waktu: **2 bulan development**, **1 bulan deployment dan testing**, **
 
 #### **Bulan 1-2 (Development Phase)**
 1. **Minggu 1-2: Setup Project & Database**
-   - Setup project dengan struktur folder: backend (Express.js) & frontend (Next.js).
+   - Setup project dengan struktur folder: backend (AdonisJS) & frontend (Next.js).
    - Setup database (MariaDB/MongoDB/PostgreSQL).
    - Buat model data objek di backend.
    - Implementasi API dasar untuk CRUD data objek museum.
 
 2. **Minggu 3-4: Admin Dashboard (Backend)**
-   - Buat endpoint API untuk input data objek museum di Express.js.
+   - Buat endpoint API untuk input data objek museum di AdonisJS.
    - Implementasi fitur untuk generate QR code di backend setelah objek disimpan.
    - Buat endpoint untuk list, edit, dan delete objek museum.
    - Setup autentikasi admin menggunakan JWT.
@@ -78,7 +78,7 @@ Pembagian waktu: **2 bulan development**, **1 bulan deployment dan testing**, **
 #### **Bulan 3 (Deployment & Testing Phase)**
 1. **Minggu 9-10: Deployment & Containerization**
    - Setup server dengan mempersiapkan semua lingkungan yang dibutuhkan seperti **pm2** dan **nginx**.
-   - Deployment backend (Express.js) di Heroku/DigitalOcean.
+   - Deployment backend (AdonisJS) di Heroku/DigitalOcean.
    - Deployment frontend (Next.js) di Vercel atau platform lain.
    
 2. **Minggu 11-12: Testing**
