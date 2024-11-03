@@ -29,7 +29,10 @@ Untuk flow pembuatan QR code yang mengarah ke halaman tertentu di frontend, bias
 5. **Dashboard Admin untuk Input Data**: Admin tinggal input data di dashboard, lalu backend generate QR code berdasarkan ID data tersebut, dan QR code ditampilkan di halaman admin.
 
 Dengan flow ini, setiap QR code akan selalu mengarah ke halaman yang sesuai di frontend.
+
 ---
+
+
 
 # MENAMBAHKAN LOGO DI TENGAH QR CODE
 
