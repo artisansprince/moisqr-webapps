@@ -19,18 +19,7 @@ async function migrateUp() {
         const passwordHash = await bcrypt.hash('admin_password', 10);
         await db.query(`INSERT INTO admins (email, password) VALUES ('admin@example.com', ?)`, [passwordHash]);
 
-        // Buat tabel objects
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS objects (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(100) NOT NULL,
-                description TEXT,
-                image_url VARCHAR(255),
-                location VARCHAR(100),
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-            );
-        `);
+        
 
         // Buat tabel categories
         await db.query(`
@@ -39,6 +28,22 @@ async function migrateUp() {
                 name VARCHAR(100) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+        `);
+
+
+        // Buat tabel objects
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS objects (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                description TEXT,
+                image_url VARCHAR(255),
+                location VARCHAR(100),
+                category_id INT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
             );
         `);
 

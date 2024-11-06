@@ -1,14 +1,26 @@
 const objectModel = require('../../models/objectModel');
 
+// exports.createObject = async (req, res) => {
+//     try {
+//         const { name, description, image_url, location } = req.body;
+//         const id = await objectModel.create(name, description, image_url, location);
+//         res.status(201).json({ message: 'Object created', id });
+//     } catch (error) {
+//         res.status(500).json({ error: 'Failed to create object' });
+//     }
+// };
+
+
 exports.createObject = async (req, res) => {
     try {
-        const { name, description, image_url, location } = req.body;
-        const id = await objectModel.create(name, description, image_url, location);
+        const { name, description, image_url, location, category_id } = req.body;
+        const id = await objectModel.create(name, description, image_url, location, category_id);
         res.status(201).json({ message: 'Object created', id });
     } catch (error) {
         res.status(500).json({ error: 'Failed to create object' });
     }
 };
+
 
 exports.getAllObjects = async (req, res) => {
     try {
@@ -36,16 +48,29 @@ exports.getObjectById = async (req, res) => {
 };
 
 
+// exports.updateObject = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const { name, description, image_url, location } = req.body;
+//         await objectModel.update(id, name, description, image_url, location);
+//         res.status(200).json({ message: 'Object updated' });
+//     } catch (error) {
+//         res.status(500).json({ error: 'Failed to update object' });
+//     }
+// };
+
+
 exports.updateObject = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, image_url, location } = req.body;
-        await objectModel.update(id, name, description, image_url, location);
+        const { name, description, image_url, location, category_id } = req.body;
+        await objectModel.update(id, name, description, image_url, location, category_id);
         res.status(200).json({ message: 'Object updated' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to update object' });
     }
 };
+
 
 exports.deleteObject = async (req, res) => {
     try {
