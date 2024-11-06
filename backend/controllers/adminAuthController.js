@@ -1,15 +1,13 @@
-// controllers/authController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { findAdminByEmail } = require('../models/adminModel');
+const adminModel = require('../models/adminModel');
 require('dotenv').config();
 
-async function login(req, res) {
+exports.loginAdmin = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Cari admin berdasarkan email
-        const admin = await findAdminByEmail(email);
+        const admin = await adminModel.findByEmail(email);
 
         if (!admin) {
             return res.status(404).json({ message: 'Admin tidak ditemukan' });
@@ -31,6 +29,4 @@ async function login(req, res) {
         console.error(error);
         res.status(500).json({ message: 'Terjadi kesalahan pada server' });
     }
-}
-
-module.exports = { login };
+};

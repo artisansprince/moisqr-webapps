@@ -1,9 +1,6 @@
-// models/adminModel.js
 const db = require('../config/db');
 
-async function findAdminByEmail(email) {
+exports.findByEmail = async (email) => {
     const [rows] = await db.query('SELECT * FROM admins WHERE email = ?', [email]);
     return rows[0];
-}
-
-module.exports = { findAdminByEmail };
+};

@@ -1,9 +1,8 @@
-// routes/authRoutes.js
 const express = require('express');
-const { login } = require('../controllers/adminAuthController');
-
+const adminAuthController = require('../controllers/adminAuthController');
 const router = express.Router();
 
-router.post('/login', login);
+// Routes untuk Admin Auth
+router.post('/login', adminAuthController.loginAdmin);
 
 module.exports = router;
