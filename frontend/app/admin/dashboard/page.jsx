@@ -3,7 +3,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "./sidebar";
+import Sidebar from "../components/sidebar";
 
 export default function Dashboard() {
   const router = useRouter();

@@ -21,7 +21,7 @@ export default function Sidebar() {
       <ul>
         <li>
           <Link
-            href="#"
+            href="/admin/dashboard"
             className="block py-2 px-4 hover:bg-gray-700 rounded"
           >
             Dashboard
@@ -29,7 +29,7 @@ export default function Sidebar() {
         </li>
         <li>
           <Link
-            href="#"
+            href="/admin/categories"
             className="block py-2 px-4 hover:bg-gray-700 rounded"
           >
             Pengelolaan Kategori
