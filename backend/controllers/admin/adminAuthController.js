@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const adminModel = require('../models/adminModel');
+const adminModel = require('../../models/adminModel');
 require('dotenv').config();
 
 exports.loginAdmin = async (req, res) => {

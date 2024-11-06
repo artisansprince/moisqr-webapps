@@ -1,4 +1,4 @@
-const categoryModel = require('../models/categoryModel');
+const categoryModel = require('../../models/categoryModel');
 
 exports.createCategory = async (req, res) => {
     try {
@@ -24,7 +24,7 @@ exports.getCategoryById = async (req, res) => {
     try {
         const { id } = req.params;
         const category = await categoryModel.findById(id);
-        
+
         if (category) {
             res.status(200).json(category);
         } else {

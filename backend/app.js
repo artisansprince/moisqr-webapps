@@ -1,8 +1,8 @@
 // app.js
 const express = require('express');
-const authRoutes = require('./routes/adminAuthRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
-const objectRoutes = require('./routes/objectRoutes');
+const authRoutes = require('./routes/admin/adminAuthRoutes');
+const categoryRoutes = require('./routes/admin/adminCategoryRoutes');
+const objectRoutes = require('./routes/admin/adminObjectRoutes');
 
 const app = express();
 app.use(express.json());
