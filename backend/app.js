@@ -1,11 +1,19 @@
-// app.js
 const express = require('express');
+const cors = require('cors');
 const authRoutes = require('./routes/admin/adminAuthRoutes');
 const categoryRoutes = require('./routes/admin/adminCategoryRoutes');
 const objectRoutes = require('./routes/admin/adminObjectRoutes');
 const publicObjectRoutes = require('./routes/public/publicObjectRoutes');
 
 const app = express();
+
+// Konfigurasi CORS
+app.use(cors({
+    origin: 'http://localhost:3000', // Ubah jika frontend berada di URL yang berbeda
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true // Perlu jika ingin mengirim cookie atau header khusus
+}));
+
 app.use(express.json());
 
 // Menambahkan routes untuk admin

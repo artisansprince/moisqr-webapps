@@ -1,3 +1,5 @@
+// backend/models/adminModel.js
+
 const db = require('../config/db');
 
 exports.findByEmail = async (email) => {

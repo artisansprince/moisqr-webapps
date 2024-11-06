@@ -1,3 +1,5 @@
+// backend/models/adminModel.js
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const adminModel = require('../../models/adminModel');
