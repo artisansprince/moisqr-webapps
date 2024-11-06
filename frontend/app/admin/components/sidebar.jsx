@@ -37,7 +37,7 @@ export default function Sidebar() {
         </li>
         <li>
           <Link
-            href="#"
+            href="/admin/objects"
             className="block py-2 px-4 hover:bg-gray-700 rounded"
           >
             Pengelolaan Objek
