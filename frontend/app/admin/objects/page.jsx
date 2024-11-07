@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Sidebar from "../components/sidebar";
 
@@ -12,7 +13,9 @@ export default function ObjectsPage() {
   const [previewImages, setPreviewImages] = useState([]); // Untuk preview gambar saat edit
   const [selectedObject, setSelectedObject] = useState(null); // Untuk menyimpan objek yang dipilih untuk detail
 
-  const baseURL = 'http://localhost:9977/api'; // Ganti dengan URL API yang sesuai
+  const router = useRouter();
+
+  const baseURL = 'http://localhost:9977'; // Ganti dengan URL API yang sesuai
 
   useEffect(() => {
     fetchObjects();
@@ -21,7 +24,8 @@ export default function ObjectsPage() {
 
   const fetchObjects = async () => {
     try {
-      const response = await axios.get(`${baseURL}/objects/get-all`);
+      const response = await axios.get(`${baseURL}/api/objects/get-all`);
+      console.log('Fetched objects:', response.data);
       setObjects(response.data);
     } catch (error) {
       console.error('Failed to fetch objects', error);
@@ -30,7 +34,7 @@ export default function ObjectsPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${baseURL}/categories/get-all`);
+      const response = await axios.get(`${baseURL}/api/categories/get-all`);
       setCategories(response.data);
     } catch (error) {
       console.error('Failed to fetch categories', error);
@@ -47,7 +51,7 @@ export default function ObjectsPage() {
 
       newObject.images.forEach((image) => formData.append('images', image));
 
-      await axios.post(`${baseURL}/objects/create`, formData, {
+      await axios.post(`${baseURL}/api/objects/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -62,7 +66,7 @@ export default function ObjectsPage() {
 
   const handleDeleteObject = async (id) => {
     try {
-      await axios.delete(`${baseURL}/objects/delete/${id}`);
+      await axios.delete(`${baseURL}/api/objects/delete/${id}`);
       fetchObjects();
     } catch (error) {
       console.error('Failed to delete object', error);
@@ -86,7 +90,7 @@ export default function ObjectsPage() {
         editingObject.images.forEach((image) => formData.append('images', image));
       }
 
-      await axios.put(`${baseURL}/objects/update/${editingObject.id}`, formData, {
+      await axios.put(`${baseURL}/api/objects/update/${editingObject.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -119,8 +123,9 @@ export default function ObjectsPage() {
     ));
   };
 
+  // Fungsi untuk mengarahkan ke halaman detail
   const handleViewDetail = (object) => {
-    setSelectedObject(object);
+    router.push(`/admin/objects/${object.id}`);
   };
 
   return (
@@ -232,57 +237,43 @@ export default function ObjectsPage() {
           </div>
         )}
 
-        <div>
-          <h2 className="text-2xl mb-3">Daftar Objek</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {objects.map((object) => (
-              <div key={object.id} className="border rounded-lg overflow-hidden shadow-lg bg-white">
-                <img
-                  src={object.images?.[0]?.url || '/placeholder.jpg'} // Ganti '/placeholder.jpg' dengan gambar default jika tidak ada gambar
-                  alt={object.name}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-semibold mb-2">{object.name}</h3>
-                  <p className="text-gray-500 mb-2">Kategori: {object.category?.name}</p>
-                  <p className="text-gray-700 mb-4 truncate">{object.description}</p>
-                  <button
-                    onClick={() => handleViewDetail(object)}
-                    className="text-blue-500 hover:underline"
-                  >
-                    Lihat Detail
-                  </button>
-                  <button
-                    onClick={() => handleEditObject(object)}
-                    className="ml-2 text-yellow-500 hover:underline"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteObject(object.id)}
-                    className="ml-2 text-red-500 hover:underline"
-                  >
-                    Hapus
-                  </button>
+          <div>
+            <h2 className="text-2xl mb-3">Daftar Objek</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {objects.map((object) => (
+                <div key={object.id} className="border rounded-lg overflow-hidden shadow-lg bg-white">
+                  <img
+                    src={`${baseURL}${object.image_url}`} // Menampilkan gambar menggunakan image_url
+                    alt={object.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-xl font-semibold mb-2">{object.name}</h3>
+                    <p className="text-gray-500 mb-2">Kategori: {object.category_name}</p> {/* Menampilkan category_name */}
+                    <p className="text-gray-700 mb-4 truncate">{object.description}</p>
+                    <button
+                      onClick={() => handleViewDetail(object)}
+                      className="bg-blue-500 text-white px-4 py-2 mr-2"
+                    >
+                      Detail
+                    </button>
+                    <button
+                      onClick={() => handleEditObject(object)}
+                      className="bg-yellow-500 text-white px-4 py-2 mr-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteObject(object.id)}
+                      className="bg-red-500 text-white px-4 py-2"
+                    >
+                      Hapus
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-
-        {selectedObject && (
-          <div className="mt-5 p-5 border rounded-lg shadow-lg bg-white">
-            <h3 className="text-2xl font-semibold">{selectedObject.name}</h3>
-            <img
-              src={selectedObject.images?.[0]?.url || '/placeholder.jpg'}
-              alt={selectedObject.name}
-              className="w-full h-64 object-cover mt-3"
-            />
-            <p className="mt-3">{selectedObject.description}</p>
-            <p className="mt-3">Lokasi: {selectedObject.location}</p>
-            <p className="mt-3">Kategori: {selectedObject.category?.name}</p>
-          </div>
-        )}
       </div>
     </div>
   );

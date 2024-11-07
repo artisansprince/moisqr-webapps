@@ -36,10 +36,23 @@ exports.findAll = async () => {
 
 
 
+// exports.findById = async (id) => {
+//     const [rows] = await db.query('SELECT * FROM objects WHERE id = ?', [id]);
+//     return rows[0];
+// };
+
+
 exports.findById = async (id) => {
-    const [rows] = await db.query('SELECT * FROM objects WHERE id = ?', [id]);
+    const [rows] = await db.query(`
+        SELECT objects.*, categories.name AS category_name
+        FROM objects
+        LEFT JOIN categories ON objects.category_id = categories.id
+        WHERE objects.id = ?
+    `, [id]);
     return rows[0];
 };
+
+
 
 // exports.update = async (id, name, description, image_url, location) => {
 //     await db.query(
