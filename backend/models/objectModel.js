@@ -1,3 +1,5 @@
+// backend/models/objectModel.js
+
 const db = require('../config/db');
 
 // exports.create = async (name, description, image_url, location) => {

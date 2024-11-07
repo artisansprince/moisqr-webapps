@@ -1,3 +1,5 @@
+// backend/app.js
+
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/admin/adminAuthRoutes');
@@ -15,6 +17,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Middleware untuk mengakses folder 'uploads' sebagai public static files
+app.use('/uploads', express.static('public/uploads'));
 
 // Menambahkan routes untuk admin
 app.use('/api/admin', authRoutes);

@@ -1,3 +1,5 @@
+// backend/routes/admin/adminObjectRoutes.js
+
 const express = require('express');
 const objectController = require('../../controllers/admin/adminObjectController');
 const router = express.Router();

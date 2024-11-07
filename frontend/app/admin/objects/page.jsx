@@ -7,13 +7,13 @@ import Sidebar from "../components/sidebar";
 export default function ObjectsPage() {
   const [objects, setObjects] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [newObject, setNewObject] = useState({ name: '', description: '', image_url: '', location: '', category_id: '' });
+  const [newObject, setNewObject] = useState({ name: '', description: '', location: '', category_id: '', images: [] });
   const [editingObject, setEditingObject] = useState(null);
+  const [previewImages, setPreviewImages] = useState([]); // Untuk preview gambar saat edit
+  const [selectedObject, setSelectedObject] = useState(null); // Untuk menyimpan objek yang dipilih untuk detail
 
-  // Base URL API
   const baseURL = 'http://localhost:9977/api'; // Ganti dengan URL API yang sesuai
 
-  // Fetch objek dan kategori dari API
   useEffect(() => {
     fetchObjects();
     fetchCategories();
@@ -39,9 +39,22 @@ export default function ObjectsPage() {
 
   const handleCreateObject = async () => {
     try {
-      await axios.post(`${baseURL}/objects/create`, newObject);
-      setNewObject({ name: '', description: '', image_url: '', location: '', category_id: '' }); // Reset form
-      fetchObjects(); // Refresh objek
+      const formData = new FormData();
+      formData.append('name', newObject.name);
+      formData.append('description', newObject.description);
+      formData.append('location', newObject.location);
+      formData.append('category_id', newObject.category_id);
+
+      newObject.images.forEach((image) => formData.append('images', image));
+
+      await axios.post(`${baseURL}/objects/create`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setNewObject({ name: '', description: '', location: '', category_id: '', images: [] });
+      fetchObjects();
     } catch (error) {
       console.error('Failed to create object', error);
     }
@@ -50,33 +63,72 @@ export default function ObjectsPage() {
   const handleDeleteObject = async (id) => {
     try {
       await axios.delete(`${baseURL}/objects/delete/${id}`);
-      fetchObjects(); // Refresh objek
+      fetchObjects();
     } catch (error) {
       console.error('Failed to delete object', error);
     }
   };
 
   const handleEditObject = (object) => {
-    setEditingObject(object);
+    setEditingObject({ ...object, images: [] });
+    setPreviewImages(object.images || []); // Set gambar yang sudah ada sebagai preview awal
   };
 
   const handleUpdateObject = async () => {
     try {
-      await axios.put(`${baseURL}/objects/update/${editingObject.id}`, editingObject);
-      setEditingObject(null); // Close edit form
-      fetchObjects(); // Refresh objek
+      const formData = new FormData();
+      formData.append('name', editingObject.name);
+      formData.append('description', editingObject.description);
+      formData.append('location', editingObject.location);
+      formData.append('category_id', editingObject.category_id);
+
+      if (editingObject.images.length > 0) {
+        editingObject.images.forEach((image) => formData.append('images', image));
+      }
+
+      await axios.put(`${baseURL}/objects/update/${editingObject.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setEditingObject(null);
+      setPreviewImages([]);
+      fetchObjects();
     } catch (error) {
       console.error('Failed to update object', error);
     }
   };
 
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files);
+    setNewObject({ ...newObject, images: [...newObject.images, ...files] });
+  };
+
+  const handleEditImageChange = (event) => {
+    const files = Array.from(event.target.files);
+    setEditingObject({ ...editingObject, images: [...editingObject.images, ...files] });
+    setPreviewImages([...previewImages, ...files]);
+  };
+
+  const handleImagePreview = (images) => {
+    return images.map((image, index) => (
+      <div key={index} className="inline-block mr-2">
+        <img src={URL.createObjectURL(image)} alt={`preview-${index}`} className="w-20 h-20 object-cover" />
+      </div>
+    ));
+  };
+
+  const handleViewDetail = (object) => {
+    setSelectedObject(object);
+  };
+
   return (
     <div className="flex">
       <Sidebar />
-      <div className="m-5">
+      <div className="m-5 w-full">
         <h1 className="text-3xl mb-5">Pengelolaan Objek</h1>
 
-        {/* Form untuk membuat objek baru */}
         <div className="mb-5">
           <input
             type="text"
@@ -94,19 +146,11 @@ export default function ObjectsPage() {
           />
           <input
             type="text"
-            placeholder="URL Gambar"
-            value={newObject.image_url}
-            onChange={(e) => setNewObject({ ...newObject, image_url: e.target.value })}
-            className="border px-4 py-2 mr-2"
-          />
-          <input
-            type="text"
             placeholder="Lokasi objek"
             value={newObject.location}
             onChange={(e) => setNewObject({ ...newObject, location: e.target.value })}
             className="border px-4 py-2 mr-2"
           />
-          {/* Dropdown untuk kategori */}
           <select
             value={newObject.category_id}
             onChange={(e) => setNewObject({ ...newObject, category_id: e.target.value })}
@@ -119,15 +163,24 @@ export default function ObjectsPage() {
               </option>
             ))}
           </select>
-          <button
-            onClick={handleCreateObject}
-            className="bg-blue-500 text-white px-4 py-2"
-          >
+
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+            className="border px-4 py-2 mr-2"
+          />
+
+          <div className="mt-2">
+            {handleImagePreview(newObject.images)}
+          </div>
+
+          <button onClick={handleCreateObject} className="bg-blue-500 text-white px-4 py-2 mt-4">
             Tambah Objek
           </button>
         </div>
 
-        {/* Form untuk mengedit objek */}
         {editingObject && (
           <div className="mb-5">
             <input
@@ -144,17 +197,10 @@ export default function ObjectsPage() {
             />
             <input
               type="text"
-              value={editingObject.image_url}
-              onChange={(e) => setEditingObject({ ...editingObject, image_url: e.target.value })}
-              className="border px-4 py-2 mr-2"
-            />
-            <input
-              type="text"
               value={editingObject.location}
               onChange={(e) => setEditingObject({ ...editingObject, location: e.target.value })}
               className="border px-4 py-2 mr-2"
             />
-            {/* Dropdown untuk kategori */}
             <select
               value={editingObject.category_id}
               onChange={(e) => setEditingObject({ ...editingObject, category_id: e.target.value })}
@@ -167,40 +213,76 @@ export default function ObjectsPage() {
                 </option>
               ))}
             </select>
-            <button
-              onClick={handleUpdateObject}
-              className="bg-yellow-500 text-white px-4 py-2"
-            >
+
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleEditImageChange}
+              className="border px-4 py-2 mr-2"
+            />
+
+            <div className="mt-2">
+              {handleImagePreview(previewImages)}
+            </div>
+
+            <button onClick={handleUpdateObject} className="bg-yellow-500 text-white px-4 py-2">
               Update Objek
             </button>
           </div>
         )}
 
-        {/* Daftar objek */}
         <div>
           <h2 className="text-2xl mb-3">Daftar Objek</h2>
-          <ul>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {objects.map((object) => (
-              <li key={object.id} className="mb-3 flex justify-between items-center">
-                <span>{object.name} - Kategori: {object.category_name}</span> {/* Tampilkan kategori */}
-                <div>
+              <div key={object.id} className="border rounded-lg overflow-hidden shadow-lg bg-white">
+                <img
+                  src={object.images?.[0]?.url || '/placeholder.jpg'} // Ganti '/placeholder.jpg' dengan gambar default jika tidak ada gambar
+                  alt={object.name}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold mb-2">{object.name}</h3>
+                  <p className="text-gray-500 mb-2">Kategori: {object.category?.name}</p>
+                  <p className="text-gray-700 mb-4 truncate">{object.description}</p>
+                  <button
+                    onClick={() => handleViewDetail(object)}
+                    className="text-blue-500 hover:underline"
+                  >
+                    Lihat Detail
+                  </button>
                   <button
                     onClick={() => handleEditObject(object)}
-                    className="bg-yellow-500 text-white px-4 py-1 mr-2"
+                    className="ml-2 text-yellow-500 hover:underline"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeleteObject(object.id)}
-                    className="bg-red-500 text-white px-4 py-1"
+                    className="ml-2 text-red-500 hover:underline"
                   >
                     Hapus
                   </button>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
+
+        {selectedObject && (
+          <div className="mt-5 p-5 border rounded-lg shadow-lg bg-white">
+            <h3 className="text-2xl font-semibold">{selectedObject.name}</h3>
+            <img
+              src={selectedObject.images?.[0]?.url || '/placeholder.jpg'}
+              alt={selectedObject.name}
+              className="w-full h-64 object-cover mt-3"
+            />
+            <p className="mt-3">{selectedObject.description}</p>
+            <p className="mt-3">Lokasi: {selectedObject.location}</p>
+            <p className="mt-3">Kategori: {selectedObject.category?.name}</p>
+          </div>
+        )}
       </div>
     </div>
   );
