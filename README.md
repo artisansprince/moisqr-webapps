@@ -3,7 +3,7 @@
 ---
 
 #### 1. **Judul Aplikasi**
-**Museum Object Information System (MOIS)**
+**Museum Object QR CODE Information System (MOISQR)**
 
 #### 2. **Deskripsi Singkat**
 MOIS adalah aplikasi berbasis web yang membantu pengelola museum untuk menginput dan menampilkan informasi objek-objek di museum secara interaktif. Pengunjung dapat mengakses informasi objek dengan cara memindai QR code yang terpasang di dekat objek, yang kemudian akan mengarahkan mereka ke halaman detail objek di website.
