@@ -20,6 +20,7 @@ app.use(express.json());
 
 // Middleware untuk mengakses folder 'uploads' sebagai public static files
 app.use('/uploads', express.static('public/uploads'));
+app.use('/qrcode', express.static('public/qrcode'));
 
 // Menambahkan routes untuk admin
 app.use('/api/admin', authRoutes);

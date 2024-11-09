@@ -39,6 +39,7 @@ async function migrateUp() {
                 name VARCHAR(100) NOT NULL,
                 description TEXT,
                 image_url VARCHAR(255),
+                qr_image_url VARCHAR(255) NULL,
                 location VARCHAR(100),
                 category_id INT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

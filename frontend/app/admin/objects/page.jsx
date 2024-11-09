@@ -263,6 +263,14 @@ export default function ObjectsPage() {
                     >
                       Edit
                     </button>
+
+                    <button
+                      onClick={() => handleViewDetail(object)}
+                      className="bg-green-500 text-white px-4 py-2 mr-2"
+                    >
+                      QR CODE
+                    </button>
+
                     <button
                       onClick={() => handleDeleteObject(object.id)}
                       className="bg-red-500 text-white px-4 py-2"

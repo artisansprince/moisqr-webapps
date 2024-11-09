@@ -70,6 +70,15 @@ exports.update = async (id, name, description, image_url, location, category_id)
 };
 
 
+// Update QR Code URL objek
+exports.updateQRCodeUrl = async (id, qrImageUrl) => {
+    await db.query(
+        'UPDATE objects SET qr_image_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+        [qrImageUrl, id]
+    );
+};
+
+
 exports.delete = async (id) => {
     await db.query('DELETE FROM objects WHERE id = ?', [id]);
 };
