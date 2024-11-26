@@ -21,6 +21,7 @@ export default function DetailObjectPage() {
   const fetchObjectDetail = async (objectId) => {
     try {
       const response = await axios.get(`${baseURL}/api/objects/get-by-id/${objectId}`);
+      console.log(response.data)
       setObject(response.data);
     } catch (error) {
       console.error('Failed to fetch object detail', error);

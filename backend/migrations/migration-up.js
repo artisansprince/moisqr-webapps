@@ -38,7 +38,7 @@ async function migrateUp() {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(100) NOT NULL,
                 description TEXT,
-                image_url VARCHAR(255),
+                image_url JSON,
                 qr_image_url VARCHAR(255) NULL,
                 location VARCHAR(100),
                 category_id INT,
