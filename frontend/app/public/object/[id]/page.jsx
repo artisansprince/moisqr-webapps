@@ -75,7 +75,7 @@ export default function DetailObjectPage() {
           <option value="fr">French</option>
           <option value="es">Spanish</option>
           <option value="de">German</option>
-          {/* <option value="jp">Japanese</option> */}
+          <option value="ja">Japanese</option>
           <option value="kr">Korean</option>
           <option value="zh-CN">Chinese (Simplified)</option>
           <option value="zh-TW">Chinese (Traditional)</option>
