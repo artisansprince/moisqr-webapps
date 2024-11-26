@@ -20,6 +20,7 @@ export default function DetailObjectPage() {
   const fetchObjectDetail = async (objectId) => {
     try {
       const response = await axios.get(`${baseURL}/api/public/objects/get-by-id/${objectId}`);
+      console.log(response.data);
       const data = response.data;
 
       // Translate fields
@@ -59,6 +60,8 @@ export default function DetailObjectPage() {
   };
 
   if (!object) return <p>Loading...</p>;
+  // Parse image_url yang berupa string JSON menjadi array
+  const imageUrls = object.image_url ? JSON.parse(object.image_url) : [];
 
   return (
     <div className="container mx-auto p-5">
@@ -89,7 +92,21 @@ export default function DetailObjectPage() {
       <h1 className="text-3xl font-bold mb-4">{object.name}</h1>
       <p className="text-gray-700 mb-2">Kategori: {object.category_name}</p>
       <p className="text-gray-500 mb-4">{object.location}</p>
-      <img src={`${baseURL}${object.image_url}`} alt={object.name} className="w-full h-64 object-cover mb-4" />
+      {/* Render gambar-gambar dari imageUrls */}
+      {imageUrls.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            {imageUrls.map((imageUrl, index) => (
+              <img
+                key={index}
+                src={`${baseURL}${imageUrl}`}
+                alt={`Image ${index + 1}`}
+                className="w-full h-64 object-cover rounded"
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No images available.</p>
+        )}
       <p className="text-gray-700">{object.description}</p>
     </div>
   );
