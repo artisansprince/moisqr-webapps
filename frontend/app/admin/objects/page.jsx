@@ -16,13 +16,14 @@ const ObjectsPage = () => {
   });
   const [editObject, setEditObject] = useState(null);
 
-  const baseURL = 'http://localhost:9977/api';
+  const baseURL = 'http://localhost:9977';
 
   // Fetch data objek dan kategori
   useEffect(() => {
     const fetchObjects = async () => {
       try {
-        const response = await axios.get(`${baseURL}/objects/get-all`);
+        const response = await axios.get(`${baseURL}/api/objects/get-all`);
+        console.log(response.data);
         setObjects(response.data);
       } catch (error) {
         console.error('Error fetching objects:', error);
@@ -31,7 +32,7 @@ const ObjectsPage = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${baseURL}/categories/get-all`);
+        const response = await axios.get(`${baseURL}/api/categories/get-all`);
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -76,7 +77,7 @@ const ObjectsPage = () => {
     try {
       if (editObject) {
         // Update object
-        await axios.put(`${baseURL}/objects/update/${editObject.id}`, form, {
+        await axios.put(`${baseURL}/api/objects/update/${editObject.id}`, form, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -84,7 +85,7 @@ const ObjectsPage = () => {
         setEditObject(null);
       } else {
         // Create object
-        await axios.post(`${baseURL}/objects/create`, form, {
+        await axios.post(`${baseURL}/api/objects/create`, form, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -93,7 +94,7 @@ const ObjectsPage = () => {
       setShowModal(false);
       setFormData({ name: '', description: '', location: '', category_id: '', images: null });
       // Refetch objects
-      const response = await axios.get(`${baseURL}/objects/get-all`);
+      const response = await axios.get(`${baseURL}/api/objects/get-all`);
       setObjects(response.data);
     } catch (error) {
       console.error('Error creating or updating object:', error);
@@ -103,9 +104,9 @@ const ObjectsPage = () => {
   // Handle Delete Object
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${baseURL}/objects/delete/${id}`);
+      await axios.delete(`${baseURL}/api/objects/delete/${id}`);
       // Refetch objects
-      const response = await axios.get(`${baseURL}/objects/get-all`);
+      const response = await axios.get(`${baseURL}/api/objects/get-all`);
       setObjects(response.data);
     } catch (error) {
       console.error('Error deleting object:', error);
@@ -147,6 +148,7 @@ const ObjectsPage = () => {
         {objects.map((object) => (
           <div key={object.id} className="border p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold">{object.name}</h3>
+            <img  src={`${baseURL}${object.image_url}`}  alt={object.name} className="w-full h-40 object-cover mt-2 rounded" />
             <p>{object.description}</p>
             <div className="mt-2">
               <button
